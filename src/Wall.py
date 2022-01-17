@@ -63,11 +63,17 @@ class Wall:
     
     # Adds an object    
     def add(self, x):    
-        # A compléter en remplaçant pass par votre code
-        pass        
+        pass
+                    
                     
     # Draws the faces
     def draw(self):
-        # A compléter en remplaçant pass par votre code
-        pass
-  
+        
+        gl.glPushMatrix()
+        gl.glRotate(self.parameters["orientation"],0,0,1)
+        for x in self.objects:
+            x.drawEdges()
+            x.draw()
+
+        gl.glPopMatrix()
+        
