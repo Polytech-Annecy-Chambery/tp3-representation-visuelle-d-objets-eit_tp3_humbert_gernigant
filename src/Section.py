@@ -67,19 +67,41 @@ class Section:
 
     # Checks if the opening can be created for the object x
     def canCreateOpening(self, x):
-        # A compléter en remplaçant pass par votre code
-        pass      
-        
+        return x.parameters['position'][0] >= 0 and x.parameters['position'][0]< 7\
+        and x.parameters['position'][0] + x.parameters['width'] >= 0 and x.parameters['position'][0] + x.parameters['width'] <self.parameters['width'] \
+        and x.parameters['position'][1] == 0\
+        and x.parameters['thickness']== self.parameters['thickness']\
+        and x.parameters['position'][2] >= 0 and x.parameters['position'][2]<self.parameters['height']\
+        and x.parameters['position'][2] + x.parameters['height'] >= 0 and x.parameters['position'][2] + x.parameters['height'] < self.parameters['height']
+                    
+      
+      
     # Creates the new sections for the object x
     def createNewSections(self, x):
-        # A compléter en remplaçant pass par votre code
-        pass              
-        
-    # Draws the edges
+        liste=[]
+        s=0        
+        if x.parameters['position'][0]-self.parameters['position'][0]!=0:
+            s=Section({'width':x.parameters['position'][0]-self.parameters['position'][0], 'height':2.6, 'thickness':0.2, 'position': self.parameters['position']})
+            liste.append(s)
+        if self.parameters['position'][1]-x.parameters['position'][1]!=0:
+            s=Section({'width':x.parameters['width'], 'height':self.parameters['position'][1]-x.parameters['position'][1], 'thickness':0.2,\
+                       'position':[x.parameters['position'][0]-self.parameters['position'][0],0,self.parameters['position'][1]-x.parameters['position'][1]] })
+            liste.append(s)
+        if x.parameters['position'][1]-self.parameters['position'][1]!=0:
+            s=Section({'width':x.parameters['width'], 'height':x.parameters['position'][1]-self.parameters['position'][1], 'thickness':0.2,\
+                       'position':[x.parameters['position'][0]-self.parameters['position'][0],0,x.parameters['position'][1]-self.parameters['position'][1]] }) 
+            liste.append(s)
+        if self.parameters['position'][0]-x.parameters['position'][0]!=0:
+            s=Section({'width':self.parameters['position'][0]-x.parameters['position'][0], 'height':self.parameters['position'][2], 'thickness':0.2,\
+                       'position':[self.parameters['position'][0]-x.parameters['position'][0],0,self.parameters['position'][2]] }) 
+            liste.append(s)    
+            
+        return liste   
+            
     def drawEdges(self):
         
         gl.glPushMatrix()
-        
+        gl.glTranslate(self.parameters['position'][0],self.parameters['position'][1],self.parameters['position'][2])
         gl.glPolygonMode(gl.GL_FRONT_AND_BACK,gl.GL_LINE)   
         gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatère
         gl.glColor3fv([0.1, 0.1, 0.1]) 
@@ -140,7 +162,10 @@ class Section:
         
         if self.parameters['edges']:
             self.drawEdges()
+            
+            
         
+        gl.glTranslate(self.parameters['position'][0],self.parameters['position'][1],self.parameters['position'][2])
         gl.glPushMatrix()
 
         gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
@@ -189,11 +214,12 @@ class Section:
         gl.glEnd()
          
         gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
-        gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatèregl.glColor3fv([0.5, 0.5, 0.5]) # Couleur gris moyen
+        gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatère
+        gl.glColor3fv([0.5, 0.5, 0.5]) # Couleur gris moyen
         gl.glVertex3fv([self.parameters['width'], self.parameters['thickness'],0])
         gl.glVertex3fv( [0, self.parameters['thickness'],0])
         gl.glVertex3fv([0, 0, 0])
         gl.glVertex3fv([self.parameters['width'], 0, 0])
         gl.glEnd()
-         
+
         gl.glPopMatrix()
